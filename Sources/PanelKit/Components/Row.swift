@@ -14,10 +14,13 @@ public struct RowTape: Sendable {
     public var fraction: Double
     /// Tint; nil keeps graphite.
     public var status: PanelStatus?
+    /// Where the level is headed (0...1), drawn faintly past the fill.
+    public var projection: Double?
 
     /// Creates a row tape.
-    public init(_ fraction: Double, status: PanelStatus? = nil) {
+    public init(_ fraction: Double, projection: Double? = nil, status: PanelStatus? = nil) {
         self.fraction = fraction
+        self.projection = projection
         self.status = status
     }
 }
@@ -116,7 +119,7 @@ public struct Row<Icon: View, Accessory: View>: View {
                 }
             }
             if let tape {
-                Tape(tape.fraction, status: tape.status)
+                Tape(tape.fraction, projection: tape.projection, status: tape.status)
                     .padding(.top, 6)
             }
         }
