@@ -46,7 +46,14 @@ public enum PanelFont {
         }
     }
 
-    /// Barlow Semi Condensed at a point size (call `PanelKit.registerFonts()` first).
+    /// Registers the bundled Barlow Semi Condensed faces for this process. Call once at launch; safe to call again.
+    /// Returns false when the font bundle can't be found; condensed text then uses the system font.
+    @discardableResult
+    public static func register() -> Bool {
+        FontRegistry.shared.register()
+    }
+
+    /// Barlow Semi Condensed at a point size (call `PanelFont.register()` first).
     /// Falls back to the condensed system font when the bundled faces aren't registered.
     public static func condensed(_ size: CGFloat, _ weight: Weight = .semibold) -> Font {
         if weight.isAvailable {

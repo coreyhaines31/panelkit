@@ -13,7 +13,7 @@ guard arguments.count == 2 else {
 let output = URL(fileURLWithPath: arguments[1], isDirectory: true)
 try FileManager.default.createDirectory(at: output, withIntermediateDirectories: true)
 
-guard PanelKit.registerFonts() else {
+guard PanelFont.register() else {
     FileHandle.standardError.write(Data("could not register Barlow Semi Condensed\n".utf8))
     exit(1)
 }

@@ -2,14 +2,12 @@ import AppKit
 import CoreText
 import Foundation
 
-/// Entry point for package-wide setup.
-public enum PanelKit {
-    /// Registers the bundled Barlow Semi Condensed faces for this process. Safe to call more than once.
-    /// Returns false when the font bundle can't be found; condensed text then uses the system font.
-    @discardableResult
-    public static func registerFonts() -> Bool {
-        FontRegistry.shared.register()
-    }
+/// Registers the bundled fonts. Kept so `PanelKit.registerFonts()` still compiles: with no `PanelKit`
+/// type in the module any more, that spelling now resolves to this module-level function.
+@available(*, deprecated, renamed: "PanelFont.register()")
+@discardableResult
+public func registerFonts() -> Bool {
+    PanelFont.register()
 }
 
 final class FontRegistry: @unchecked Sendable {
