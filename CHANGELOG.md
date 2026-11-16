@@ -1,12 +1,10 @@
 # Changelog
 
-## Unreleased
+## 0.2.0
 - `Fascia.leadingAccessory(isPresented:)` leaves the slot out when false, so an absent back key doesn't push the nameplate right.
 - `.panelFieldBottomPadding(_:)` sets the space below `Field` and `NativeSearchField` (default 8 pt).
 - `MenuCard(menuWidth:)` fills menus wider than 340 pt (the card is the menu width minus the 5 pt inset); `NSMenuItem.panelCard` stretches with the menu.
 - README credits the vintage Sony tape decks that inspired the Brushed look.
-
-## 0.2.0
 
 Pieces the eight apps built locally while adopting 0.1, moved into PanelKit (#1).
 
