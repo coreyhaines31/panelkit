@@ -14,10 +14,13 @@ public struct RowTape: Sendable {
     public var fraction: Double
     /// Tint; nil keeps graphite.
     public var status: PanelStatus?
+    /// Where the level is headed (0...1), drawn faintly past the fill.
+    public var projection: Double?
 
     /// Creates a row tape.
-    public init(_ fraction: Double, status: PanelStatus? = nil) {
+    public init(_ fraction: Double, projection: Double? = nil, status: PanelStatus? = nil) {
         self.fraction = fraction
+        self.projection = projection
         self.status = status
     }
 }
@@ -55,6 +58,8 @@ public struct Row<Icon: View, Accessory: View>: View {
     public var options: RowOptions
     private let icon: Icon
     private let accessory: Accessory
+    private var subtitleLines = 1
+    private var trailing: AnyView?
 
     @Environment(\.panelTheme) private var theme
 
@@ -100,13 +105,17 @@ public struct Row<Icon: View, Accessory: View>: View {
                         Text(subtitle)
                             .font(PanelFont.body(11.5))
                             .foregroundStyle(theme.sub)
-                            .lineLimit(1)
+                            .lineLimit(subtitleLines)
                             .truncationMode(.tail)
+                            .fixedSize(horizontal: false, vertical: subtitleLines > 1)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .layoutPriority(1)
                 valueColumn
+                if let trailing {
+                    trailing.fixedSize()
+                }
                 if options.contains(.chevron) {
                     Text("›")
                         .font(PanelFont.body(15))
@@ -116,7 +125,7 @@ public struct Row<Icon: View, Accessory: View>: View {
                 }
             }
             if let tape {
-                Tape(tape.fraction, status: tape.status)
+                Tape(tape.fraction, projection: tape.projection, status: tape.status)
                     .padding(.top, 6)
             }
         }
@@ -134,6 +143,20 @@ public struct Row<Icon: View, Accessory: View>: View {
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(selected ? .isSelected : [])
+    }
+
+    /// Lets the subtitle wrap to this many lines (default 1); pass nil for no limit.
+    public func subtitleLineLimit(_ lines: Int?) -> Row {
+        var copy = self
+        copy.subtitleLines = lines ?? Int.max
+        return copy
+    }
+
+    /// Puts views (buttons, a switch) at the far right of the row, after the value column.
+    public func trailingAccessory<V: View>(@ViewBuilder _ accessory: () -> V) -> Row {
+        var copy = self
+        copy.trailing = AnyView(accessory())
+        return copy
     }
 
     @ViewBuilder private var valueColumn: some View {
@@ -210,6 +233,37 @@ extension Row where Icon == EmptyView {
     ) {
         self.init(name, icon: EmptyView(), subtitle: subtitle, value: value, valueTone: valueTone,
                   secondary: secondary, tape: tape, options: options, accessory: accessory)
+    }
+}
+
+/// A 22 pt metal key-cap tile with an SF Symbol, for rows whose item has no app icon.
+public struct SymbolTile: View {
+    /// The SF Symbol name.
+    public var systemName: String
+    /// Draw only the symbol, without the metal tile.
+    public var isBare: Bool
+
+    @Environment(\.panelTheme) private var theme
+
+    /// Creates a tile; pass `bare: true` for the symbol alone.
+    public init(_ systemName: String, bare: Bool = false) {
+        self.systemName = systemName
+        self.isBare = bare
+    }
+
+    public var body: some View {
+        Image(systemName: systemName)
+            .font(.system(size: isBare ? 13 : 11, weight: isBare ? .regular : .semibold))
+            .foregroundStyle(theme.ink)
+            .frame(width: 22, height: 22)
+            .background {
+                if !isBare {
+                    RoundedRectangle(cornerRadius: 5)
+                        .fill(LinearGradient(colors: theme.button2, startPoint: .top, endPoint: .bottom))
+                        .overlay(RoundedRectangle(cornerRadius: 5).strokeBorder(theme.button2Edge, lineWidth: 1))
+                }
+            }
+            .accessibilityHidden(true)
     }
 }
 

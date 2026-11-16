@@ -55,22 +55,56 @@ public struct Field: View {
                     .accessibilityHidden(true)
             }
         }
-        .foregroundStyle(theme.sub)
-        .padding(.vertical, 7)
-        .padding(.horizontal, 10)
-        .background(
-            RoundedRectangle(cornerRadius: 6)
-                .fill(theme.field)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 6)
-                        .strokeBorder(theme.line, lineWidth: 1)
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 6)
-                        .strokeBorder(LinearGradient(colors: [.black.opacity(0.08), .clear], startPoint: .top, endPoint: .center), lineWidth: 1)
-                )
-        )
-        .padding(.horizontal, 14)
-        .padding(.bottom, 8)
+        .modifier(FieldChrome(verticalPadding: 7))
+    }
+}
+
+/// The recessed well behind `Field` and `NativeSearchField`, inset to the row margin.
+struct FieldChrome: ViewModifier {
+    let verticalPadding: CGFloat
+    @Environment(\.panelTheme) private var theme
+    @Environment(\.panelFieldBottomPadding) private var bottomPadding
+
+    func body(content: Content) -> some View {
+        content
+            .foregroundStyle(theme.sub)
+            .padding(.vertical, verticalPadding)
+            .padding(.horizontal, 10)
+            .background(
+                RoundedRectangle(cornerRadius: 6)
+                    .fill(theme.field)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 6)
+                            .strokeBorder(theme.line, lineWidth: 1)
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 6)
+                            .strokeBorder(
+                                LinearGradient(colors: [.black.opacity(0.08), .clear], startPoint: .top, endPoint: .center),
+                                lineWidth: 1
+                            )
+                    )
+            )
+            .padding(.horizontal, 14)
+            .padding(.bottom, bottomPadding)
+    }
+}
+
+private struct PanelFieldBottomPaddingKey: EnvironmentKey {
+    static let defaultValue: CGFloat = 8
+}
+
+extension EnvironmentValues {
+    /// Space below a `Field` or `NativeSearchField` well. Defaults to 8 pt.
+    public var panelFieldBottomPadding: CGFloat {
+        get { self[PanelFieldBottomPaddingKey.self] }
+        set { self[PanelFieldBottomPaddingKey.self] = newValue }
+    }
+}
+
+extension View {
+    /// Sets the space below `Field` and `NativeSearchField` wells in this view (default 8 pt).
+    public func panelFieldBottomPadding(_ padding: CGFloat) -> some View {
+        environment(\.panelFieldBottomPadding, padding)
     }
 }

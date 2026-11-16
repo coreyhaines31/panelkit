@@ -1,5 +1,36 @@
 import SwiftUI
 
+/// A bare status LED (7 pt lamp with a glow), for inline status next to your own text.
+/// It is hidden from VoiceOver: say the status in the text beside it.
+public struct StatusLED: View {
+    /// The status the LED shows.
+    public var status: PanelStatus
+    /// Diameter in points.
+    public var size: CGFloat
+
+    @Environment(\.panelTheme) private var theme
+
+    /// Creates a status LED.
+    public init(_ status: PanelStatus, size: CGFloat = 7) {
+        self.status = status
+        self.size = size
+    }
+
+    public var body: some View {
+        let color = theme.color(for: status)
+        Circle()
+            .fill(color)
+            .overlay(
+                Circle().fill(
+                    LinearGradient(colors: [.clear, .black.opacity(0.3)], startPoint: .center, endPoint: .bottom)
+                )
+            )
+            .frame(width: size, height: size)
+            .lampGlow(status == .off ? .clear : color, radius: size * 5 / 7)
+            .accessibilityHidden(true)
+    }
+}
+
 /// A status LED with an uppercase word beside it. Colour is always paired with a word.
 public struct StatusLight: View {
     /// The status the LED shows.
@@ -16,17 +47,8 @@ public struct StatusLight: View {
     }
 
     public var body: some View {
-        let color = theme.color(for: status)
         HStack(spacing: 6) {
-            Circle()
-                .fill(color)
-                .overlay(
-                    Circle().fill(
-                        LinearGradient(colors: [.clear, .black.opacity(0.3)], startPoint: .center, endPoint: .bottom)
-                    )
-                )
-                .frame(width: 7, height: 7)
-                .lampGlow(status == .off ? .clear : color, radius: 5)
+            StatusLED(status)
             Text(label)
                 .panelCaps(10, tracking: 0.2)
                 .foregroundStyle(theme.ink2)
