@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1
+- Builds on Xcode 16: the brushed-metal sheen and meter geometry use explicit Double trig (Xcode 16 found `sin` ambiguous).
+- CI builds on Xcode 16 (macos-15) and the current runner.
+
 ## 0.2.0
 - `Fascia.leadingAccessory(isPresented:)` leaves the slot out when false, so an absent back key doesn't push the nameplate right.
 - `.panelFieldBottomPadding(_:)` sets the space below `Field` and `NativeSearchField` (default 8 pt).
