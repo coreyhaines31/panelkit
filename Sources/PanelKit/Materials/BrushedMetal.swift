@@ -70,10 +70,12 @@ public struct BrushedMetal: View {
     }
 
     private func sheenLine(in size: CGSize, degrees: Double) -> (start: CGPoint, end: CGPoint) {
-        let rad = degrees * .pi / 180
-        let dx = sin(rad)
-        let dy = -cos(rad)
-        let length = abs(size.width * sin(rad)) + abs(size.height * cos(rad))
+        // Computed in Double and converted once: older Swift (Xcode 16) finds `sin` ambiguous between
+        // the CGFloat and Double overloads when the two types mix in one expression.
+        let rad = degrees * Double.pi / 180
+        let dx = CGFloat(Foundation.sin(rad))
+        let dy = CGFloat(-Foundation.cos(rad))
+        let length = abs(size.width * dx) + abs(size.height * dy)
         let center = CGPoint(x: size.width / 2, y: size.height / 2)
         return (
             CGPoint(x: center.x - dx * length / 2, y: center.y - dy * length / 2),
