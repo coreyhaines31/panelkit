@@ -365,3 +365,31 @@ enum GalleryData {
         }
     }()
 }
+
+extension GalleryData {
+    /// Uneven readings over 30 days (gaps while the Mac slept), projected to full in mid December.
+    static var datedForecast: ForecastConfig {
+        let start = Date(timeIntervalSince1970: 1_760_572_800) // 16 Oct 2025
+        let day = 86_400.0
+        let days: [Double] = [0, 1, 2, 5, 6, 7, 11, 12, 15, 18, 19, 20, 24, 27, 28, 30]
+        let points = days.map { ForecastPoint(start.addingTimeInterval($0 * day), 708 + $0 * 2.4 + (($0 * 7).truncatingRemainder(dividingBy: 5) - 2)) }
+        return ForecastConfig(
+            points: points,
+            projection: ForecastPoint(start.addingTimeInterval(60 * day), 994),
+            domain: start...start.addingTimeInterval(60 * day),
+            lowerBound: 600, limit: 994,
+            startLabel: "Oct 16", endLabel: "Full 15 Dec", limitLabel: "994 GB",
+            startValueLabel: "706 GB", todayValueLabel: "780 GB",
+            accessibilityLabel: "Dated forecast"
+        )
+    }
+
+    /// Today close to the end, so the Today label gives way to "Full 19 Nov".
+    static var collidingForecast: ForecastConfig {
+        ForecastConfig(
+            history: diskHistory, lowerBound: 600, limit: 994, projection: 994, todayPosition: 0.86,
+            startLabel: "Oct 16", endLabel: "Full 19 Nov", limitLabel: "994 GB",
+            accessibilityLabel: "Forecast filling soon"
+        )
+    }
+}

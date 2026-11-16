@@ -49,6 +49,7 @@ func render<V: View>(_ view: V, scheme: ColorScheme, to name: String) throws {
 
 for (scheme, suffix) in [(ColorScheme.light, "light"), (ColorScheme.dark, "dark")] {
     try render(ComponentSheet(), scheme: scheme, to: "components-\(suffix)")
+    try render(AdditionsSheet(), scheme: scheme, to: "additions-\(suffix)")
     for sample in AppSamples.all {
         try render(sample.view.popoverShadow(), scheme: scheme, to: "\(sample.slug)-\(suffix)")
     }
