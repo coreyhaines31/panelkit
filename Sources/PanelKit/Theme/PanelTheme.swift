@@ -65,6 +65,8 @@ public struct PanelTheme: Sendable {
     public var caution: Color
     /// Stop status colour (also out-of-range values).
     public var stop: Color
+    /// Text links and clickable steps.
+    public var link: Color
     /// Whether the fascia is black anodised (dark) rather than brushed aluminium.
     public var isDark: Bool
 
@@ -101,6 +103,7 @@ public struct PanelTheme: Sendable {
         go: Color(hex: 0x2F9E4F),
         caution: Color(hex: 0xD9921A),
         stop: Color(hex: 0xE0452B),
+        link: Color(hex: 0x2F63D3),
         isDark: false
     )
 
@@ -127,6 +130,7 @@ public struct PanelTheme: Sendable {
         go: Color(hex: 0x4FD06F),
         caution: Color(hex: 0xF2B23A),
         stop: Color(hex: 0xFF5A3C),
+        link: Color(hex: 0x8FB0FF),
         isDark: true
     )
 
@@ -177,8 +181,8 @@ extension EnvironmentValues {
         set { self[PanelThemeOverrideKey.self] = newValue }
     }
 
-    /// The theme components draw with.
-    var panelTheme: PanelTheme {
+    /// The theme PanelKit components draw with: the override if set, otherwise light or dark from `colorScheme`.
+    public var panelTheme: PanelTheme {
         panelThemeOverride ?? PanelTheme.resolve(colorScheme)
     }
 }
