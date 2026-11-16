@@ -1,7 +1,8 @@
 import SwiftUI
 
 /// A small stat tile: a caps label over a value and an optional line or tape, in a recess.
-/// Lay two side by side with `HStack(spacing: 8)` or a two-column grid inside `.padding(.horizontal, 14)`.
+/// Lay two side by side with `HStack(spacing: 8)` inside `.padding(.horizontal, 14)`; add
+/// `.fixedSize(horizontal: false, vertical: true)` to the stack so the tiles share a height.
 public struct ReadingTile<Detail: View>: View {
     /// The caps label, e.g. "Memory".
     public var label: String
@@ -39,6 +40,7 @@ public struct ReadingTile<Detail: View>: View {
                     .font(PanelFont.body(11))
                     .foregroundStyle(theme.sub)
             }
+            .frame(maxHeight: .infinity, alignment: .top)
         }
         .accessibilityElement(children: .combine)
     }
