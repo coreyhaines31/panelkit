@@ -10,7 +10,7 @@ The package lives at the repo root (`Package.swift`, sources in `Sources/PanelKi
 
 ## Inspiration
 
-PanelKit's look comes from vintage **Sony** tape decks and hi-fi gear of the late 1960s and 1970s: brushed-aluminium faceplates, black label strips, chrome knobs and bezels, cream VU meters with black needles, and colour used only for pilot lights and red zones. The meters, nameplates, label strips and piano keys here are an homage to those machines. Corey Haines pointed at Sony's tape decks as the reference ("i like this clean monochromatic look of sony vintage gadgets") and the whole family was built from that.
+PanelKit's look comes from vintage **Sony** tape decks and hi-fi gear of the late 1960s and 1970s: brushed-aluminium faceplates, black label strips, chrome knobs and bezels, cream VU meters with black needles, and colour used only for pilot lights and red zones. The meters, nameplates, label strips and piano keys here are an homage to those machines. The whole app family was designed with Sony's tape decks as the reference.
 
 PanelKit is an independent project and is not affiliated with or endorsed by Sony. It borrows the materials and layout ideas only; it uses no Sony names, logos or nameplates.
 
