@@ -63,6 +63,7 @@ public struct Field: View {
 struct FieldChrome: ViewModifier {
     let verticalPadding: CGFloat
     @Environment(\.panelTheme) private var theme
+    @Environment(\.panelFieldBottomPadding) private var bottomPadding
 
     func body(content: Content) -> some View {
         content
@@ -85,6 +86,25 @@ struct FieldChrome: ViewModifier {
                     )
             )
             .padding(.horizontal, 14)
-            .padding(.bottom, 8)
+            .padding(.bottom, bottomPadding)
+    }
+}
+
+private struct PanelFieldBottomPaddingKey: EnvironmentKey {
+    static let defaultValue: CGFloat = 8
+}
+
+extension EnvironmentValues {
+    /// Space below a `Field` or `NativeSearchField` well. Defaults to 8 pt.
+    public var panelFieldBottomPadding: CGFloat {
+        get { self[PanelFieldBottomPaddingKey.self] }
+        set { self[PanelFieldBottomPaddingKey.self] = newValue }
+    }
+}
+
+extension View {
+    /// Sets the space below `Field` and `NativeSearchField` wells in this view (default 8 pt).
+    public func panelFieldBottomPadding(_ padding: CGFloat) -> some View {
+        environment(\.panelFieldBottomPadding, padding)
     }
 }

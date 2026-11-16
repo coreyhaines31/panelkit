@@ -75,10 +75,11 @@ public struct Fascia<Content: View>: View {
         }
     }
 
-    /// Puts views (usually a `KeyCap` back key) before the nameplate.
-    public func leadingAccessory<V: View>(@ViewBuilder _ accessory: () -> V) -> Fascia {
+    /// Puts views (usually a `KeyCap` back key) before the nameplate. Pass `isPresented: false` to leave
+    /// the slot out entirely, so the nameplate keeps its place (an empty builder still takes up room).
+    public func leadingAccessory<V: View>(isPresented: Bool = true, @ViewBuilder _ accessory: () -> V) -> Fascia {
         var copy = self
-        copy.leading = AnyView(accessory())
+        copy.leading = isPresented ? AnyView(accessory()) : nil
         return copy
     }
 
