@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- `MenuCard(menuWidth:)` fills menus wider than 340 pt (the card is the menu width minus the 5 pt inset); `NSMenuItem.panelCard` stretches with the menu.
 - README credits the vintage Sony tape decks that inspired the Brushed look.
 
 ## 0.2.0
