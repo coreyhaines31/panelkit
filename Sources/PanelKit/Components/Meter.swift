@@ -148,7 +148,7 @@ struct MeterGeometry {
     /// Point at `radius` from the pivot at a dial angle in degrees (0 = straight up).
     func point(_ r: CGFloat, _ degrees: Double) -> CGPoint {
         let a = (degrees - 90) * .pi / 180
-        return CGPoint(x: cx + r * CGFloat(cos(a)), y: cy + r * CGFloat(sin(a)))
+        return CGPoint(x: cx + r * CGFloat(Foundation.cos(a)), y: cy + r * CGFloat(Foundation.sin(a)))
     }
 
     func arc(_ r: CGFloat, from v0: Double, to v1: Double) -> Path {
