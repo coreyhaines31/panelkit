@@ -1,0 +1,19 @@
+name: build
+
+on:
+  push:
+    branches: [main, development]
+  pull_request:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        # macos-15 ships Xcode 16, which contributors and app CI still use; macos-26 is the current toolchain.
+        os: [macos-15, macos-26]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: swift build
