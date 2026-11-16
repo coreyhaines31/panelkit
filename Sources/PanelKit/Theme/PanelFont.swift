@@ -1,4 +1,23 @@
+import AppKit
 import SwiftUI
+
+final class FontAvailability: @unchecked Sendable {
+    static let shared = FontAvailability()
+    private let lock = NSLock()
+    private var names: Set<String> = []
+
+    func isKnown(_ name: String) -> Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        return names.contains(name)
+    }
+
+    func remember(_ name: String) {
+        lock.lock()
+        defer { lock.unlock() }
+        names.insert(name)
+    }
+}
 
 /// Fonts used by the Brushed panel: Barlow Semi Condensed for plates and strips, SF Pro for body text.
 public enum PanelFont {
@@ -8,11 +27,32 @@ public enum PanelFont {
         case medium = "BarlowSemiCondensed-Medium"
         case semibold = "BarlowSemiCondensed-SemiBold"
         case bold = "BarlowSemiCondensed-Bold"
+
+        var systemWeight: Font.Weight {
+            switch self {
+            case .light: .light
+            case .medium: .medium
+            case .semibold: .semibold
+            case .bold: .bold
+            }
+        }
+
+        /// Whether the face is registered; only a positive answer is cached, so registering later still takes effect.
+        var isAvailable: Bool {
+            if FontAvailability.shared.isKnown(rawValue) { return true }
+            guard NSFont(name: rawValue, size: 12) != nil else { return false }
+            FontAvailability.shared.remember(rawValue)
+            return true
+        }
     }
 
     /// Barlow Semi Condensed at a point size (call `PanelKit.registerFonts()` first).
+    /// Falls back to the condensed system font when the bundled faces aren't registered.
     public static func condensed(_ size: CGFloat, _ weight: Weight = .semibold) -> Font {
-        .custom(weight.rawValue, size: size)
+        if weight.isAvailable {
+            return .custom(weight.rawValue, size: size)
+        }
+        return .system(size: size, weight: weight.systemWeight).width(.condensed)
     }
 
     /// The system font (SF Pro) at a point size.
