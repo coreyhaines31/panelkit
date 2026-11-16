@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased
+- README credits the vintage Sony tape decks that inspired the Brushed look.
+
 ## 0.2.0
 
 Pieces the eight apps built locally while adopting 0.1, moved into PanelKit (#1).
