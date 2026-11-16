@@ -236,6 +236,37 @@ extension Row where Icon == EmptyView {
     }
 }
 
+/// A 22 pt metal key-cap tile with an SF Symbol, for rows whose item has no app icon.
+public struct SymbolTile: View {
+    /// The SF Symbol name.
+    public var systemName: String
+    /// Draw only the symbol, without the metal tile.
+    public var isBare: Bool
+
+    @Environment(\.panelTheme) private var theme
+
+    /// Creates a tile; pass `bare: true` for the symbol alone.
+    public init(_ systemName: String, bare: Bool = false) {
+        self.systemName = systemName
+        self.isBare = bare
+    }
+
+    public var body: some View {
+        Image(systemName: systemName)
+            .font(.system(size: isBare ? 13 : 11, weight: isBare ? .regular : .semibold))
+            .foregroundStyle(theme.ink)
+            .frame(width: 22, height: 22)
+            .background {
+                if !isBare {
+                    RoundedRectangle(cornerRadius: 5)
+                        .fill(LinearGradient(colors: theme.button2, startPoint: .top, endPoint: .bottom))
+                        .overlay(RoundedRectangle(cornerRadius: 5).strokeBorder(theme.button2Edge, lineWidth: 1))
+                }
+            }
+            .accessibilityHidden(true)
+    }
+}
+
 /// A 22 pt metal key-cap tile with a letter or symbol, for row icons.
 public struct LetterTile: View {
     /// The character shown.
