@@ -177,8 +177,8 @@ extension EnvironmentValues {
         set { self[PanelThemeOverrideKey.self] = newValue }
     }
 
-    /// The theme components draw with.
-    var panelTheme: PanelTheme {
+    /// The theme PanelKit components draw with: the override if set, otherwise light or dark from `colorScheme`.
+    public var panelTheme: PanelTheme {
         panelThemeOverride ?? PanelTheme.resolve(colorScheme)
     }
 }
