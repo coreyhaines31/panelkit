@@ -58,6 +58,8 @@ public struct Row<Icon: View, Accessory: View>: View {
     public var options: RowOptions
     private let icon: Icon
     private let accessory: Accessory
+    private var subtitleLines = 1
+    private var trailing: AnyView?
 
     @Environment(\.panelTheme) private var theme
 
@@ -103,13 +105,17 @@ public struct Row<Icon: View, Accessory: View>: View {
                         Text(subtitle)
                             .font(PanelFont.body(11.5))
                             .foregroundStyle(theme.sub)
-                            .lineLimit(1)
+                            .lineLimit(subtitleLines)
                             .truncationMode(.tail)
+                            .fixedSize(horizontal: false, vertical: subtitleLines > 1)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .layoutPriority(1)
                 valueColumn
+                if let trailing {
+                    trailing.fixedSize()
+                }
                 if options.contains(.chevron) {
                     Text("›")
                         .font(PanelFont.body(15))
@@ -137,6 +143,20 @@ public struct Row<Icon: View, Accessory: View>: View {
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(selected ? .isSelected : [])
+    }
+
+    /// Lets the subtitle wrap to this many lines (default 1); pass nil for no limit.
+    public func subtitleLineLimit(_ lines: Int?) -> Row {
+        var copy = self
+        copy.subtitleLines = lines ?? Int.max
+        return copy
+    }
+
+    /// Puts views (buttons, a switch) at the far right of the row, after the value column.
+    public func trailingAccessory<V: View>(@ViewBuilder _ accessory: () -> V) -> Row {
+        var copy = self
+        copy.trailing = AnyView(accessory())
+        return copy
     }
 
     @ViewBuilder private var valueColumn: some View {
