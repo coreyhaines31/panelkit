@@ -84,12 +84,15 @@ extension NSMenuItem {
     }
 }
 
-/// Hosts the card and installs the menu's solid backing once the menu window exists.
+/// Hosts the card and keeps the menu's solid backing in whichever menu window the card is in.
 private final class MenuCardHostingView<Content: View>: NSHostingView<Content> {
+    private weak var backing: MenuBackingView?
+
     override func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()
+        backing?.removeFromSuperview()
         if #available(macOS 26, *), let window {
-            MenuBackingView.install(in: window)
+            backing = MenuBackingView.install(in: window)
         }
     }
 }
@@ -106,12 +109,12 @@ private final class MenuBackingView: NSView {
             : NSColor(srgbRed: 0.965, green: 0.965, blue: 0.961, alpha: 1)
     }
 
-    static func install(in window: NSWindow) {
-        guard let content = window.contentView,
-              !content.subviews.contains(where: { $0 is MenuBackingView }) else { return }
+    static func install(in window: NSWindow) -> MenuBackingView? {
+        guard let content = window.contentView else { return nil }
         let backing = MenuBackingView(frame: content.bounds)
         backing.autoresizingMask = [.width, .height]
         content.addSubview(backing, positioned: .below, relativeTo: nil)
+        return backing
     }
 
     override var wantsUpdateLayer: Bool { true }
