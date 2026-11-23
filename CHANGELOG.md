@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.2
+- `NSMenuItem.panelCard` backs the whole menu with a solid light or dark fill on macOS 26 and later, where the system's Liquid Glass let the windows behind the menu show through the rows under the card. Submenus keep the system background.
+
 ## 0.2.1
 - Builds on Xcode 16: the brushed-metal sheen and meter geometry use explicit Double trig (Xcode 16 found `sin` ambiguous).
 - CI builds on Xcode 16 (macos-15) and the current runner.
